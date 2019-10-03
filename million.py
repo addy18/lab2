@@ -56,86 +56,87 @@ class LinkedList:
                 temp.print_data()
                 temp = temp.next
 
-    def merge_sort(self):
-        start = self.head
-        if start is None or start.next is None:
-            return start
-        # left = start.splitting()
-        left, right = start.spliting()
-        left = left.merge_sort()
-        right = right.merge_sort()
-        return start.merge(left, right)
+def merge_sort(head):
+    start = head
+    if start is None or start.next is None:
+        return start
+    left, right = spliting(start)
+    left = merge_sort(left)
+    right = merge_sort(right)
+    return merge(left, right)
 
-    def splitting(self):
-        curr = self.head
-        if curr is None or curr.next is None:
-            left = curr
-            right = None
-            return left, right
-        else:
-            mid = curr
-            temp = curr.next
-            while temp is not None:
-                temp = temp.next
-                if temp is not None:
-                    temp = temp.next
-                    mid = mid.next
+def splitting(head):
+    curr = head
+    if curr is None or curr.next is None:
         left = curr
-        right = mid.next
-        mid.next = None
+        right = None
         return left, right
-
-    def merge(self, left, right):
-        result = self.head
-        curr = result
-        while left and right:
-            if left.count > right.count:
-                curr.next = left
-                left = left.next
-            else:
-                curr.next = right
-                right = right.next
-            curr = curr.next
-        if left is None:
-            curr.next = right
-        if right is None:
-            curr.next = left
-        return result.next
-
-l_list = LinkedList()
-
-stuff = {}
-with open(file = "10-million-combos.txt", encoding = "utf-8", errors='ignore') as text:
-# with open("pass.txt") as text:
-# text = open("test2.txt", "r")
-    read = text.readlines()
-for line in read:
-    password = line.split("  ")
-    if l_list.search(password[-1]) == False:
-        l_list.append(password[-1])
-
-print("Unsorted :)")
-l_list.print_list()
-print("-----------------")
-print("Bubble :)")
-l_list.bubble()
-l_list.print_list()
-print("-----------------")
-print("Merge :)")
-# l_list.merge_sort()
-
-# SOLUTION B!!!!!!!!
-print("-----------------")
-print("dictionary :)")
-dict = {}
-file = open("test.txt", "r")
-second_list = file.readlines()
-for elem in second_list:
-    row = elem.split("  ")
-    if row[-1] in dict:
-        dict[row[-1]] = dict[row[-1]] + 1
     else:
-        dict[row[-1]] = 1
-for i in dict:
-    print(dict[i])
+        mid = curr
+        temp = curr.next
+        while temp is not None:
+            temp = temp.next
+            if temp is not None:
+                temp = temp.next
+                mid = mid.next
+    left = curr
+    right = mid.next
+    mid.next = None
+    return left, right
 
+def merge(left, right):
+    result = Node("", 1, None)
+    curr = result
+    while left and right:
+        if left.count > right.count:
+            curr.next = left
+            left = left.next
+        else:
+            curr.next = right
+            right = right.next
+        curr = curr.next
+    if left is None:
+        curr.next = right
+    if right is None:
+        curr.next = left
+    return result.next
+
+def main():
+    l_list = LinkedList()
+
+    stuff = {}
+    with open(file = "10-million-combos.txt", encoding = "utf-8", errors='ignore') as text:
+    # with open("pass.txt") as text:
+        read = text.readlines()
+    for line in read:
+        password = line.split("  ")
+        if l_list.search(password[-1]) == False:
+            l_list.append(password[-1])
+
+    print("Unsorted :)")
+    l_list.print_list()
+    print("-----------------")
+    print("Bubble :)")
+    l_list.bubble()
+    l_list.print_list()
+    print("-----------------")
+    print("Merge :)")
+    l_list.head = merge_sort(l_list.head)
+    l_list.print_list()
+
+    # SOLUTION B!!!!!!!!
+    print("-----------------")
+    print("dictionary :)")
+    dict = {}
+    file = open("test.txt", "r")
+    second_list = file.readlines()
+    for elem in second_list:
+        row = elem.split("  ")
+        if row[-1] in dict:
+            dict[row[-1]] = dict[row[-1]] + 1
+        else:
+            dict[row[-1]] = 1
+    for i in dict:
+        print("Password ", i, " count: ", dict[i])
+
+main()
